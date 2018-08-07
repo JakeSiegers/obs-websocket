@@ -652,7 +652,7 @@ void WSEvents::StreamStatus() {
     obs_data_set_double(data, "fps", obs_get_active_fps());
     obs_data_set_double(data, "strain", strain);
     obs_data_set_bool(data, "preview-only", false); // Retrocompat with OBSRemote
-    obs_data_set_string(data, "frame", "Timestamp: "+frame.timestamp);
+    obs_data_set_string(data, "frame", "Timestamp: "+frame->timestamp);
 
     broadcastUpdate("StreamStatus", data);
 }
