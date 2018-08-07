@@ -639,6 +639,8 @@ void WSEvents::StreamStatus() {
 
     float strain = obs_output_get_congestion(streamOutput);
 
+    obs_source_frame frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
+
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
     obs_data_set_bool(data, "recording", recordingActive);
@@ -650,6 +652,7 @@ void WSEvents::StreamStatus() {
     obs_data_set_double(data, "fps", obs_get_active_fps());
     obs_data_set_double(data, "strain", strain);
     obs_data_set_bool(data, "preview-only", false); // Retrocompat with OBSRemote
+    obs_data_set_string(data, "frame", "Timestamp: "+frame.timestamp);
 
     broadcastUpdate("StreamStatus", data);
 }
