@@ -639,7 +639,7 @@ void WSEvents::StreamStatus() {
 
     float strain = obs_output_get_congestion(streamOutput);
 
-    obs_source_frame frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
+    obs_source_frame* frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
 
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
