@@ -639,7 +639,7 @@ void WSEvents::StreamStatus() {
 
     float strain = obs_output_get_congestion(streamOutput);
 
-    obs_source_frame* frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
+    struct obs_source_frame *frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
 
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
@@ -652,9 +652,22 @@ void WSEvents::StreamStatus() {
     obs_data_set_double(data, "fps", obs_get_active_fps());
     obs_data_set_double(data, "strain", strain);
     obs_data_set_bool(data, "preview-only", false); // Retrocompat with OBSRemote
-    obs_data_set_string(data, "frame", "[Frame Goes Here]");
+    obs_data_set_string(data, "frame", escape_json(frame->data));
 
     broadcastUpdate("StreamStatus", data);
+}
+
+std::string escape_json(const std::string &s) {
+    std::ostringstream o;
+    for (auto c = s.cbegin(); c != s.cend(); c++) {
+        if (*c == '"' || *c == '\\' || ('\x00' <= *c && *c <= '\x1f')) {
+            o << "\\u"
+              << std::hex << std::setw(4) << std::setfill('0') << (int)*c;
+        } else {
+            o << *c;
+        }
+    }
+    return o.str();
 }
 
 /**
