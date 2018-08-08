@@ -47,6 +47,7 @@ class WSEvents : public QObject {
   private slots:
     void deferredInitOperations();
     void StreamStatus();
+    void escape_json();
     void Heartbeat();
     void TransitionDurationChanged(int ms);
 

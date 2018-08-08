@@ -27,6 +27,8 @@
 #include "WSEvents.h"
 
 #include "obs-websocket.h"
+#include <sstream>
+#include <iomanip>
 
 bool transitionIsCut(obs_source_t* transition) {
     if (!transition)
@@ -657,7 +659,7 @@ void WSEvents::StreamStatus() {
     broadcastUpdate("StreamStatus", data);
 }
 
-std::string escape_json(const std::string &s) {
+std::string WSEvents::escape_json(const std::string &s) {
     std::ostringstream o;
     for (auto c = s.cbegin(); c != s.cend(); c++) {
         if (*c == '"' || *c == '\\' || ('\x00' <= *c && *c <= '\x1f')) {
