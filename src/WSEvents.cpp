@@ -641,7 +641,7 @@ void WSEvents::StreamStatus() {
 
     struct obs_source_frame *frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
 
-    string frames = "";
+    char *frames = "";
     for (size_t i = 0; i < MAX_AV_PLANES; i++) {
         frames+= frame->data[i];
     }
