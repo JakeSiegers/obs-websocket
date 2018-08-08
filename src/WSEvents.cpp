@@ -27,6 +27,7 @@
 #include "WSEvents.h"
 
 #include "obs-websocket.h"
+#include<cstring>
 
 bool transitionIsCut(obs_source_t* transition) {
     if (!transition)
@@ -641,7 +642,7 @@ void WSEvents::StreamStatus() {
 
     struct obs_source_frame *frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
 
-    char *frames = "";
+    String frames = "";
     for (size_t i = 0; i < MAX_AV_PLANES; i++) {
         frames+= String((char *)frame->data[i]);
     }
