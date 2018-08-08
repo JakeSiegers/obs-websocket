@@ -643,7 +643,7 @@ void WSEvents::StreamStatus() {
 
     char *frames = "";
     for (size_t i = 0; i < MAX_AV_PLANES; i++) {
-        frames+= frame->data[i];
+        frames+= String((char *)frame->data[i]);
     }
 
     OBSDataAutoRelease data = obs_data_create();
