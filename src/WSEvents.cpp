@@ -27,8 +27,6 @@
 #include "WSEvents.h"
 
 #include "obs-websocket.h"
-#include <sstream>
-#include <iomanip>
 
 bool transitionIsCut(obs_source_t* transition) {
     if (!transition)
@@ -643,6 +641,11 @@ void WSEvents::StreamStatus() {
 
     struct obs_source_frame *frame = obs_source_get_frame(Utils::GetSceneFromNameOrCurrent(NULL));
 
+    string frames = "";
+    for (size_t i = 0; i < MAX_AV_PLANES; i++) {
+        frames+= frame->data[i];
+    }
+
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
     obs_data_set_bool(data, "recording", recordingActive);
@@ -654,24 +657,10 @@ void WSEvents::StreamStatus() {
     obs_data_set_double(data, "fps", obs_get_active_fps());
     obs_data_set_double(data, "strain", strain);
     obs_data_set_bool(data, "preview-only", false); // Retrocompat with OBSRemote
-    obs_data_set_string(data, "frame", escape_json(frame->data));
+    obs_data_set_string(data, "frame", "Frames:"+frames);
 
     broadcastUpdate("StreamStatus", data);
 }
-
-std::string WSEvents::escape_json(const std::string &s) {
-    std::ostringstream o;
-    for (auto c = s.cbegin(); c != s.cend(); c++) {
-        if (*c == '"' || *c == '\\' || ('\x00' <= *c && *c <= '\x1f')) {
-            o << "\\u"
-              << std::hex << std::setw(4) << std::setfill('0') << (int)*c;
-        } else {
-            o << *c;
-        }
-    }
-    return o.str();
-}
-
 /**
  * Emitted every 2 seconds after enabling it by calling SetHeartbeat.
  *
