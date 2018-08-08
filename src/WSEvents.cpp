@@ -646,6 +646,8 @@ void WSEvents::StreamStatus() {
     for (size_t i = 0; i < MAX_AV_PLANES; i++) {
         frames+= std::string((char *)frame->data[i]);
     }
+    char * framesChar = new char[frames.length() + 1];
+    std::strcpy(framesChar,frames.c_str());
 
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
@@ -658,7 +660,7 @@ void WSEvents::StreamStatus() {
     obs_data_set_double(data, "fps", obs_get_active_fps());
     obs_data_set_double(data, "strain", strain);
     obs_data_set_bool(data, "preview-only", false); // Retrocompat with OBSRemote
-    obs_data_set_string(data, "frame", "Frames:"+frames);
+    obs_data_set_string(data, "frame", framesChar);
 
     broadcastUpdate("StreamStatus", data);
 }
